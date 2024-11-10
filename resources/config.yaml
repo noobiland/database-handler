@@ -1,0 +1,13 @@
+databases:
+  family:
+    db_location: /home/pi/Documents/databases
+    report: false
+    resources: [
+      family_users.csv
+    ]
+  expenses:
+    db_location: /home/pi/Documents/databases
+    report: true
+  guests:
+    db_location: /home/pi/Documents/databases
+    report: true
