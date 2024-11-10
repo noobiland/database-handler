@@ -6,6 +6,7 @@ databases:
       family_users.csv
     ]
   expenses:
+    handle: 
     db_location: /home/pi/Documents/databases
     report: true
   guests:

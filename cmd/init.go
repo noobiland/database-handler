@@ -8,12 +8,13 @@ import (
 	"fmt"
 
 	"github.com/spf13/cobra"
+	"database-handler/handler"
 )
 
 // initCmd represents the init command
 var initCmd = &cobra.Command{
 	Use:   "init",
-	Short: "A brief description of your command",
+	Short: "init database",
 	Long: `A longer description that spans multiple lines and likely contains examples
 and usage of using your command. For example:
 
@@ -22,12 +23,22 @@ This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("init called")
+		for _, database := range args{
+			fmt.Println("Initialization for argument: ", database)
+			switch database {
+			case "expenses":
+				h:= handler.ExpensesDbHandler{}
+				h.InitDb()
+			default:
+				fmt.Println("arg is not supported")
+			}
+		}
+
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(initCmd)
-
 	// Here you will define your flags and configuration settings.
 
 	// Cobra supports Persistent Flags which will work for this command
