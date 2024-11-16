@@ -1,14 +1,13 @@
 /*
 Copyright © 2024 NAME HERE <EMAIL ADDRESS>
-
 */
 package cmd
 
 import (
 	"fmt"
 
-	"github.com/spf13/cobra"
 	"database-handler/handler"
+	"github.com/spf13/cobra"
 )
 
 // initCmd represents the init command
@@ -23,13 +22,18 @@ This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("init called")
-		for _, database := range args{
+		if (len(args) == 0) {
+			// TODO: make err
+			fmt.Println("no database name specified")
+		}
+		for _, database := range args {
 			fmt.Println("Initialization for argument: ", database)
 			switch database {
 			case "expenses":
-				h:= handler.ExpensesDbHandler{}
+				h := handler.ExpensesDbHandler{}
 				h.InitDb()
 			default:
+				// TODO: make err
 				fmt.Println("arg is not supported")
 			}
 		}

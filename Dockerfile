@@ -29,7 +29,6 @@ RUN apt-get update && apt-get install -y libc6 libsqlite3-0 ca-certificates && r
 # Copy the built binary and directories from the builder stage
 COPY --from=builder /app/database-handler /database-handler
 COPY --from=builder /app/resources /resources
-COPY --from=builder /app/output /output
 
 # Run the Go binary
 ENTRYPOINT ["/database-handler"]

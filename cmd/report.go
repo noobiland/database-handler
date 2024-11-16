@@ -25,6 +25,7 @@ to quickly create a Cobra application.`,
 	},
 }
 
+// TODO:
 func init() {
 	rootCmd.AddCommand(reportCmd)
 
