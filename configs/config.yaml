@@ -2,7 +2,7 @@ databases:
   users:
     db_location: /home/pi/Documents/databases
     report: false
-    resources: [
+    secret-data: [
       users.csv
     ]
   expenses:

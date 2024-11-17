@@ -11,7 +11,7 @@ WORKDIR /app
 COPY go.mod go.sum ./
 RUN go mod download
 
-# Copy the rest of the application code, including resources and output directories
+# Copy the rest of the application code, including configs directories
 COPY . .
 
 # Install the necessary development libraries for SQLite and cross-compilation tools
@@ -28,7 +28,7 @@ RUN apt-get update && apt-get install -y libc6 libsqlite3-0 ca-certificates && r
 
 # Copy the built binary and directories from the builder stage
 COPY --from=builder /app/database-handler /database-handler
-COPY --from=builder /app/resources /resources
+COPY --from=builder /app/configs /configs
 
 # Run the Go binary
 ENTRYPOINT ["/database-handler"]

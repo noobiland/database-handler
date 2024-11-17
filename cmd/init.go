@@ -38,7 +38,7 @@ var initCmd = &cobra.Command{
 					DbPath:       "./databases/db/users.db",
 					BackupPath:   "./databases/backup/users.db.bkp",
 					InitPath:     "./sql/users/init.sql",
-					InitDataPath: "./resources/users.csv",
+					InitDataPath: "./secret-data/users.csv",
 				}
 				h.InitDb()
 			default:
