@@ -1,9 +1,9 @@
 databases:
-  family:
+  users:
     db_location: /home/pi/Documents/databases
     report: false
     resources: [
-      family_users.csv
+      users.csv
     ]
   expenses:
     handle: 

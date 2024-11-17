@@ -5,39 +5,46 @@ package cmd
 
 import (
 	"fmt"
+	"log/slog"
 
 	"database-handler/handler"
+	"database-handler/util"
+
 	"github.com/spf13/cobra"
 )
 
 // initCmd represents the init command
 var initCmd = &cobra.Command{
 	Use:   "init",
-	Short: "init database",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Short: "init <database name>",
+	Long:  `Tool to initialize databases. Use get command to get database information`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("init called")
-		if (len(args) == 0) {
-			// TODO: make err
-			fmt.Println("no database name specified")
+		slog.Info("Init called")
+		if len(args) == 0 {
+			util.Logger.Error("no database name specified", "error", nil)
 		}
 		for _, database := range args {
-			fmt.Println("Initialization for argument: ", database)
+			slog.Info(fmt.Sprintf("Initialization for argument: %s", database))
 			switch database {
 			case "expenses":
-				h := handler.ExpensesDbHandler{}
+				h := handler.ExpensesDbHandler{
+					DbPath:     "./databases/db/expenses.db",
+					BackupPath: "./databases/backup/expenses.db.bkp",
+					InitPath:   "./sql/expenses/init.sql",
+				}
+				h.InitDb()
+			case "users":
+				h := handler.UsersDbHandler{
+					DbPath:       "./databases/db/users.db",
+					BackupPath:   "./databases/backup/users.db.bkp",
+					InitPath:     "./sql/users/init.sql",
+					InitDataPath: "./resources/users.csv",
+				}
 				h.InitDb()
 			default:
-				// TODO: make err
-				fmt.Println("arg is not supported")
+				util.Logger.Error("arg is not supported", "error", nil)
 			}
 		}
-
 	},
 }
 

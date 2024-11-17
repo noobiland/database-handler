@@ -1,12 +1,13 @@
 # TODO List:
 
-* [ ] Validation code for expenses only
-* [ ] Backup code for expenses only
-* [ ] Expenses Database initialization
-* [ ] Family db initialization
+* [x] Validation db existense code for expenses only
+* [x] Backup code for expenses only
+* [x] Expenses Database initialization
+* [x] Family db initialization
+* [ ] Test new dbs on PI
 * [ ] Redirect budget bot on new db
 * [ ] Configure report command
-* [ ] Configure general validation command
+* [ ] Configure general validation command for schemas
 * [ ] Configure general backup command
 * [ ] Configure get and get-all
 

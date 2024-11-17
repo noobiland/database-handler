@@ -1,7 +1,7 @@
 package handler
 
-type DbHandler interface{
-	initDb()
-	backupDb()
-	reportDb(reportName string)
-}
+// type DbHandler interface{
+// 	initDb()
+// 	backupDb()
+// 	reportDb(reportName string)
+// }

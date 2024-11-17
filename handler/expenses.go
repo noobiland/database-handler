@@ -11,13 +11,10 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
-const (
-	dbLoc      = "./databases/db/expenses.db"
-	backupLoc  = "./databases/backup/expenses.db.bkp"
-	scriptsLoc = "./sql/expenses/init.sql"
-)
-
 type ExpensesDbHandler struct {
+	DbPath     string
+	BackupPath string
+	InitPath   string
 }
 
 func (eDb ExpensesDbHandler) InitDb() {
@@ -34,7 +31,7 @@ func (eDb ExpensesDbHandler) InitDb() {
 
 func (eDb ExpensesDbHandler) validateDb() bool {
 	slog.Info("Check if the database file exists")
-	if _, err := os.Stat(dbLoc); os.IsNotExist(err) {
+	if _, err := os.Stat(eDb.DbPath); os.IsNotExist(err) {
 		slog.Info("Database does not exist. Will Skip backup steps.")
 		return false
 	}
@@ -44,10 +41,10 @@ func (eDb ExpensesDbHandler) validateDb() bool {
 func (eDb ExpensesDbHandler) backupDb() {
 	slog.Info("Backup db by moving file")
 	currentTime := time.Now()
-	dst := fmt.Sprintf("%s.%s", backupLoc, currentTime.Format("20060102-15-04"))
+	dst := fmt.Sprintf("%s.%s", eDb.BackupPath, currentTime.Format("20060102-15-04"))
 
 	// Move (rename) the file
-	err := os.Rename(dbLoc, dst)
+	err := os.Rename(eDb.DbPath, dst)
 	if err != nil {
 		util.Logger.Error("Failed to rename (move) file", "error", err)
 	}
@@ -57,15 +54,14 @@ func (eDb ExpensesDbHandler) backupDb() {
 func (eDb ExpensesDbHandler) createDb() {
 	slog.Info("create db")
 	slog.Info("Connect to SQLite database to create it)")
-	db, err := sql.Open("sqlite3", dbLoc)
+	db, err := sql.Open("sqlite3", eDb.DbPath)
 	if err != nil {
 		util.Logger.Error("Failed to connect to database", "error", err)
 	}
 	defer db.Close()
 
-	err = util.RunQueryFromFile(db, scriptsLoc)
+	err = util.RunQueryFromFile(db, eDb.InitPath)
 	if err != nil {
 		util.Logger.Error("Can't create table", "error", err)
 	}
-
 }
