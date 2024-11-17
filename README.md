@@ -4,12 +4,13 @@
 * [x] Backup code for expenses only
 * [x] Expenses Database initialization
 * [x] Family db initialization
-* [ ] Test new dbs on PI
+* [x] Test new dbs on PI
 * [ ] Redirect budget bot on new db
 * [ ] Configure report command
 * [ ] Configure general validation command for schemas
 * [ ] Configure general backup command
 * [ ] Configure get and get-all
+* [ ] Can't create required folders, if missing
 
 
 # Docker commands
