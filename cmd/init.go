@@ -23,6 +23,7 @@ var initCmd = &cobra.Command{
 		if len(args) == 0 {
 			util.Logger.Error("no database name specified", "error", nil)
 		}
+		migrationFlag, _ := cmd.Flags().GetBool("migration")
 		for _, database := range args {
 			slog.Info(fmt.Sprintf("Initialization for argument: %s", database))
 			switch database {
@@ -32,7 +33,7 @@ var initCmd = &cobra.Command{
 					BackupPath: "./databases/backup/expenses.db.bkp",
 					InitPath:   "./sql/expenses/init.sql",
 				}
-				h.InitDb()
+				h.InitDb(migrationFlag)
 			case "users":
 				h := handler.UsersDbHandler{
 					DbPath:       "./databases/db/users.db",
@@ -58,5 +59,5 @@ func init() {
 
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
-	// initCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	initCmd.Flags().BoolP("migration", "m", false, "init with data migration from existed db")
 }

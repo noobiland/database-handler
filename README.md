@@ -5,6 +5,7 @@
 * [x] Expenses Database initialization
 * [x] Family db initialization
 * [x] Test new dbs on PI
+* [ ] data migration mechanism
 * [ ] Redirect budget bot on new db
 * [ ] Configure report command
 * [ ] Configure general validation command for schemas
