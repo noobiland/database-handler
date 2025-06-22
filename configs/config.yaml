@@ -1,14 +1,11 @@
 databases:
   users:
-    db_location: /home/pi/Documents/databases
-    report: false
-    secret-data: [
-      users.csv
-    ]
+    db_path: ./databases/db/users.db
+    backup_path: ./databases/backup/users.db.bkp
+    init_path: ./sql/users/init.sql
+    init_data_path: ./secret-data/users.csv
   expenses:
-    handle: 
-    db_location: /home/pi/Documents/databases
-    report: true
-  guests:
-    db_location: /home/pi/Documents/databases
-    report: true
+    db_path: ./databases/db/expenses.db
+    backup_path: ./databases/backup/expenses.db.bkp
+    init_path: ./sql/expenses/init.sql
+    init_data_path: null

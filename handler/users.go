@@ -19,19 +19,19 @@ type UsersDbHandler struct {
 	InitDataPath string
 }
 
-func (uDb UsersDbHandler) InitDb() {
+func (uDb UsersDbHandler) InitDb(migrationFlag bool) {
 	slog.Info("Init users db")
 	// validate db
-	if uDb.validateDb() {
+	if uDb.ValidateDb() {
 		// TODO: stop function if error
 		// backup if db exist.
-		uDb.backupDb()
+		uDb.BackupDb()
 	}
 	// create db
-	uDb.createDb()
+	uDb.CreateDb()
 }
 
-func (uDb UsersDbHandler) validateDb() bool {
+func (uDb UsersDbHandler) ValidateDb() bool {
 	slog.Info("Check if the database file exists")
 	if _, err := os.Stat(uDb.DbPath); os.IsNotExist(err) {
 		slog.Info("Database does not exist. Will Skip backup steps.")
@@ -40,7 +40,7 @@ func (uDb UsersDbHandler) validateDb() bool {
 	return true
 }
 
-func (uDb UsersDbHandler) backupDb() {
+func (uDb UsersDbHandler) BackupDb() string {
 	slog.Info("Backup db by moving file")
 	currentTime := time.Now()
 	dst := fmt.Sprintf("%s.%s", uDb.BackupPath, currentTime.Format("20060102-15-04"))
@@ -51,9 +51,10 @@ func (uDb UsersDbHandler) backupDb() {
 		util.Logger.Error("Failed to rename (move) file", "error", err)
 	}
 	slog.Info("File moved successfully")
+	return dst
 }
 
-func (uDb UsersDbHandler) createDb() {
+func (uDb UsersDbHandler) CreateDb() {
 	slog.Info("create db")
 	slog.Info("Connect to SQLite database to create it)")
 	db, err := sql.Open("sqlite3", uDb.DbPath)
@@ -66,11 +67,15 @@ func (uDb UsersDbHandler) createDb() {
 	if err != nil {
 		util.Logger.Error("Can't create table", "error", err)
 	}
-	uDb.importInitialDataFromCsv(db)
+	uDb.ImportInitialDataFromCsv(db)
 
 }
 
-func (uDb UsersDbHandler) importInitialDataFromCsv(db *sql.DB) {
+func (uDb UsersDbHandler) MigrateData(backupLoc string) {
+	slog.Info("STUB")
+}
+
+func (uDb UsersDbHandler) ImportInitialDataFromCsv(db *sql.DB) {
 	// Open CSV file
 	file, err := os.Open(uDb.InitDataPath)
 	if err != nil {

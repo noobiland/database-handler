@@ -1,9 +1,10 @@
 /*
-Copyright © 2024 NAME HERE <EMAIL ADDRESS>
+Copyright © 2024 Telitsyn Dmitry <dmitry.telitsyn@gmail.com>
 */
 package cmd
 
 import (
+	"database/sql"
 	"fmt"
 	"log/slog"
 
@@ -11,6 +12,7 @@ import (
 	"database-handler/util"
 
 	"github.com/spf13/cobra"
+	"gopkg.in/yaml.v3"
 )
 
 // initCmd represents the init command
@@ -24,40 +26,63 @@ var initCmd = &cobra.Command{
 			util.Logger.Error("no database name specified", "error", nil)
 		}
 		migrationFlag, _ := cmd.Flags().GetBool("migration")
+		slog.Info("Starting arguments verification")
+		verified := true
 		for _, database := range args {
-			slog.Info(fmt.Sprintf("Initialization for argument: %s", database))
-			switch database {
-			case "expenses":
-				h := handler.ExpensesDbHandler{
-					DbPath:     "./databases/db/expenses.db",
-					BackupPath: "./databases/backup/expenses.db.bkp",
-					InitPath:   "./sql/expenses/init.sql",
-				}
-				h.InitDb(migrationFlag)
-			case "users":
-				h := handler.UsersDbHandler{
-					DbPath:       "./databases/db/users.db",
-					BackupPath:   "./databases/backup/users.db.bkp",
-					InitPath:     "./sql/users/init.sql",
-					InitDataPath: "./secret-data/users.csv",
-				}
-				h.InitDb()
-			default:
-				util.Logger.Error("arg is not supported", "error", nil)
+			verified = verified && util.CheckDbIsSupported(database)
+		}
+		if verified {
+			slog.Info("All the databases are confirmed, starting the operation")
+		} else {
+			slog.Error("Not all dbs are supported, check your arguments and try again")
+			return
+		}
+
+		for _, database := range args {
+			h, err := getDbHandlerByName(database)
+			if err != nil {
+				panic(err)
 			}
+			h.InitDb(migrationFlag)
 		}
 	},
 }
 
+type DBHandler interface {
+	InitDb(migrationFlag bool)
+	ValidateDb() bool
+	BackupDb() string
+	CreateDb()
+	MigrateData(backupLoc string)
+	ImportInitialDataFromCsv(db *sql.DB)
+}
+
+func getDbHandlerByName(name string) (DBHandler, error) {
+	var cfg util.Config
+	if err := yaml.Unmarshal(util.GetConfigs(), &cfg); err != nil {
+		panic(err)
+	}
+	switch name {
+	case "expenses":
+		return handler.ExpensesDbHandler{
+			DbPath:     cfg.Databases[name].DBPath,
+			BackupPath: cfg.Databases[name].BackupPath,
+			InitPath:   cfg.Databases[name].InitPath,
+		}, nil
+	case "users":
+		return handler.ExpensesDbHandler{
+			DbPath:       cfg.Databases[name].DBPath,
+			BackupPath:   cfg.Databases[name].BackupPath,
+			InitPath:     cfg.Databases[name].InitPath,
+			InitDataPath: *cfg.Databases[name].InitDataPath,
+		}, nil
+	default:
+		util.Logger.Error("arg is not supported", "error", nil)
+		return nil, fmt.Errorf("unknown handler type: %s", name)
+	}
+}
+
 func init() {
 	rootCmd.AddCommand(initCmd)
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// initCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
 	initCmd.Flags().BoolP("migration", "m", false, "init with data migration from existed db")
 }

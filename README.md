@@ -5,13 +5,15 @@
 * [x] Expenses Database initialization
 * [x] Family db initialization
 * [x] Test new dbs on PI
-* [ ] data migration mechanism
-* [ ] Redirect budget bot on new db
+* [X] ~~*data migration mechanism*~~ [2024-12]
+* [X] ~~*Redirect budget bot on new db*~~ [2024-12]
 * [ ] Configure report command
 * [ ] Configure general validation command for schemas
 * [ ] Configure general backup command
-* [ ] Configure get and get-all
+* [ ] Configure get and get-all for supported dbs
 * [ ] Can't create required folders, if missing
+* [ ] When table is empty, migration option returns error
+
 
 
 # Docker commands
