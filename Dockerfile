@@ -32,6 +32,5 @@ COPY --from=builder /app/configs /configs
 COPY --from=builder /app/sql /sql
 COPY --from=builder /app/secret-data /secret-data
 
-
-# Run the Go binary
-ENTRYPOINT ["/database-handler"]
+# Default command keeps container alive
+CMD ["tail", "-f", "/dev/null"]
