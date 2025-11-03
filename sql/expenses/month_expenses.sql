@@ -3,5 +3,6 @@ CREATE TABLE "month_expenses" (
     "user" TEXT NOT NULL,
     "amount" INTEGER NOT NULL,
     "category" TEXT NOT NULL,
-    "payment" TEXT NOT NULL
+    "payment" TEXT NOT NULL,
+    "comment" TEXT
 );
